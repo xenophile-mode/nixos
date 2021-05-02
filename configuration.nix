@@ -43,8 +43,17 @@
   # Enable Desktop Environment.
   services.xserver.enable = true;
   services.xserver.displayManager.lightdm.enable = true;
-  services.xserver.displayManager.defaultSession = "none+dwm"; 
-  services.xserver.windowManager.dwm.enable = true;
+  services.xserver.displayManager.defaultSession = "none+xmonad"; 
+services.xserver.windowManager = {                     # Open configuration for the window manager.
+    xmonad.enable = true;                                # Enable xmonad.
+    xmonad.enableContribAndExtras = true;                # Enable xmonad contrib and extras.
+    xmonad.extraPackages = hpkgs: [                      # Open configuration for additional Haskell packages.
+      hpkgs.xmonad-contrib                               # Install xmonad-contrib.
+      hpkgs.xmonad-extras                                # Install xmonad-extras.
+      hpkgs.xmonad                                       # Install xmonad itself.
+    ];
+    default = "xmonad";                                  # Set xmonad as the default window manager.
+  };
   
 
   # Configure keymap in X11
@@ -142,6 +151,12 @@
      haskellPackages.freetype2
      st
      ly
+     xterm
+     haskellPackages.xmobar
+     rofi
+     kakoune
+     cwm
+     gnome3.gedit
   ];
 
 fonts.fonts = with pkgs; [
@@ -150,23 +165,6 @@ fonts.fonts = with pkgs; [
 ];
 
   nixpkgs.config.allowUnfree = true;
-
-  
-  nixpkgs.config.dmenu.patches = [
-    /home/xenophile/dmenu-center-4.8.diff
-    ];
-
-  nixpkgs.config.dwm.patches = [
-     /home/xenophile/dwm-fixborders-6.2.diff
-     /home/xenophile/dwm-uselessgap-20200719-bb2e722.diff
-    ];
-    
-
-  nixpkgs.config.st.patches = [
-      /home/xenophile/st-blinking_cursor-20200531-a2a7044.diff
-      /home/xenophile/st-bold-is-not-bright-20190127-3be4cf1.diff
-      /home/xenophile/st-alpha-0.8.2.diff
-    ];
 
 
 
@@ -208,4 +206,3 @@ fonts.fonts = with pkgs; [
   system.stateVersion = "20.09"; # Did you read the comment?
 
 }
-
