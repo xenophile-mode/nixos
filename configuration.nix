@@ -16,6 +16,8 @@
   networking.hostName = "nix-thinkpad"; # Define your hostname.
   # networking.wireless.enable = true;   # Enables wireless support via wpa_supplicant.
   networking.networkmanager.enable = true;
+  systemd.services.systemd-udev-settle.enable = false;
+  systemd.services.NetworkManager-wait-online.enable = false;
   
 
 
@@ -25,9 +27,11 @@
   # The global useDHCP flag is deprecated, therefore explicitly set to false here.
   # Per-interface useDHCP will be mandatory in the future, so this generated config
   # replicates the default behaviour.
-  networking.useDHCP = false;
-  networking.interfaces.enp0s25.useDHCP = true;
-  networking.interfaces.wlp3s0.useDHCP = true;
+#  services.dhcpd4.enable = false;
+#  services.dhcpd6.enable = false;
+#  networking.useDHCP = false;
+#  networking.interfaces.enp0s25.useDHCP = true;
+#  networking.interfaces.wlp3s0.useDHCP = false;
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -42,9 +46,13 @@
 
   # Enable Desktop Environment.
   services.xserver.enable = true;
-  services.xserver.displayManager.lightdm.enable = true;
+  services.xserver.displayManager.startx.enable = true;
   services.xserver.displayManager.defaultSession = "none+xmonad"; 
-services.xserver.windowManager = {                     # Open configuration for the window manager.
+#  services.xserver.windowManager.cwm.enable = true;
+#  services.xserver.autorun = false;
+#  services.xserver.exportConfiguration = true;
+
+  services.xserver.windowManager = {                     # Open configuration for the window manager.
     xmonad.enable = true;                                # Enable xmonad.
     xmonad.enableContribAndExtras = true;                # Enable xmonad contrib and extras.
     xmonad.extraPackages = hpkgs: [                      # Open configuration for additional Haskell packages.
@@ -91,7 +99,6 @@ services.xserver.windowManager = {                     # Open configuration for 
      feh
      imagemagick
      picom
-     i3
      xfce.thunar
      fff
      glances
@@ -116,8 +123,6 @@ services.xserver.windowManager = {                     # Open configuration for 
      haxor-news
      next
      libnma
-     openvpn
-     networkmanager-openvpn
      alacritty
      termite
      i3lock
@@ -136,8 +141,6 @@ services.xserver.windowManager = {                     # Open configuration for 
      rtorrent
      googler
      neo-cowsay
-     wireguard-tools
-     mullvad-vpn
      protonvpn-cli
      dwm
      dmenu
@@ -157,6 +160,11 @@ services.xserver.windowManager = {                     # Open configuration for 
      kakoune
      cwm
      gnome3.gedit
+     xorg.xdm
+     lightdm-tiny-greeter
+     lightdm-mini-greeter
+     xorg.xauth
+     xorg.xorgserver
   ];
 
 fonts.fonts = with pkgs; [
@@ -170,11 +178,7 @@ fonts.fonts = with pkgs; [
 
   # Enable device auto-mounting
   services.devmon.enable = true;
-  
-  #Set zsh as shell for a user
-  users.extraUsers.xenophile = {
-      shell = pkgs.zsh;
-    };
+
 
 
 
